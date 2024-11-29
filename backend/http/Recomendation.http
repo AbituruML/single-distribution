@@ -1,0 +1,43 @@
+### GET ALL STUDY DIRECTIONS
+GET {{base_path}}/direction_study
+
+### GET RECOMENDATION
+# @no-cookie-jar
+POST {{base_path}}/recommendation
+Content-Type: application/json
+
+{
+  "gender": "male",
+  "sum_use_score": 120,
+  "olympiads": {
+    "mathematics": true,
+    "computer_science": true,
+    "physics": true
+  },
+  "hobbies": {
+    "game_development": true,
+    "sport": true,
+    "programming": true,
+    "robotics": true,
+    "3d_modeling": true,
+    "mathematics": true,
+    "creativity": true,
+    "physics": true
+  },
+  "likes": {
+    "web_development": 2,
+    "system_administration": 2,
+    "mathematics": 2,
+    "hardware": 2,
+    "biology": 2,
+    "data_science": 2,
+    "design": 2,
+    "backend_development": 2,
+    "frontend_development": 2,
+    "economy": 2,
+    "hacking": 2
+  },
+  "preferred_it_job": "game_development",
+  "uni_was_my_decision": true,
+  "is_grades_important": true
+}

@@ -1,0 +1,2 @@
+### GET HEALTH
+GET {{base_path}}/health

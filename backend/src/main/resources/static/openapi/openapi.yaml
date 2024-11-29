@@ -1,0 +1,270 @@
+openapi: 3.0.0
+info:
+  title: Recommendation API
+  version: 1.0.0
+  description: API для получения рекомендации к выбору направления обучения.
+
+
+tags:
+  - name: RecommendationDirectionally
+    description: Рекомендация направления.
+
+
+components:
+  schemas:
+    DirectionsStudy:
+      type: array
+      items:
+        type: object
+        properties:
+          code:
+            type: string
+            description: Код направления
+          name:
+            type: string
+            description: Название направления
+    Error:
+      type: object
+      properties:
+        path:
+          type: string
+          title: Url ошибки
+          nullable: false
+        message:
+          type: string
+          title: Сообщение ошибки
+          nullable: false
+        statusCode:
+          type: integer
+          title: Код статуса ошибки
+          nullable: false
+        timestamp:
+          type: string
+          format: date-time
+          title: Время ошибки
+          nullable: false
+  examples:
+    DirectionsStudy:
+      value:
+        - name: Прикладная информатика
+          code: 09.03.03
+    RecommendationBadRequest:
+      value:
+        path: /recommendation
+        message: Не предоставлен JSON
+        statusCode: 400
+        timestamp: 2024-04-14T17:15:46.609+00:00
+paths:
+  /direction_study:
+    get:
+      summary: Получение списка направлений
+      tags:
+        - RecommendationDirectionally
+      responses:
+        200:
+          description: Список направлений
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DirectionsStudy"
+              examples:
+                DirectionStudyGetList:
+                  $ref: '#/components/examples/DirectionsStudy'
+  /recommendation:
+    post:
+      summary: Получение рекомендации к выбору направления обучения
+      description: Получает анкету в формате json и возвращает код рекомендуемого направления.
+      tags:
+        - RecommendationDirectionally
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gender:
+                  type: string
+                  nullable: false
+                  enum:
+                    - male
+                    - female
+                sum_use_score:
+                  type: integer
+                  minimum: 0
+                  maximum: 310
+                  nullable: false
+                olympiads:
+                  type: object
+                  description: Принимали ли вы участие в олимпиадах по профильным предметам
+                  properties:
+                    mathematics:
+                      type: boolean
+                      description: Участие в олимпиадах по математике
+                    computer_science:
+                      type: boolean
+                      description: Участие в олимпиадах по информатике
+                    physics:
+                      type: boolean
+                      description: Участие в олимпиадах по физике
+                  required:
+                    - mathematics
+                    - computer_science
+                    - physics
+                hobbies:
+                  type: object
+                  description: Какие увлечения у вас были, когда вы учились в школе?
+                  properties:
+                    game_development:
+                      type: boolean
+                      description: Геймдев, VR, AR
+                    sport:
+                      type: boolean
+                      description: Спорт
+                    programming:
+                      type: boolean
+                      description: Программирование
+                    robotics:
+                      type: boolean
+                      description: Робототехника
+                    3d_modeling:
+                      type: boolean
+                      description: 3D Моделирование
+                    mathematics:
+                      type: boolean
+                      description: Математика
+                    creativity:
+                      type: boolean
+                      description: Творчество
+                    physics:
+                      type: boolean
+                      description: Физика
+                  required:
+                    - game_development
+                    - sport
+                    - programming
+                    - robotics
+                    - modeling
+                    - mathematics
+                    - creativity
+                    - physics
+                likes:
+                  type: object
+                  nullable: false
+                  description: Насколько вы любите заниматься... от 0 до 2
+                  properties:
+                    web_development:
+                      type: integer
+                      description: Веб-разработка
+                      minimum: 0
+                      maximum: 2
+                    system_administration:
+                      type: integer
+                      description: Системное администрирование
+                      minimum: 0
+                      maximum: 2
+                    mathematics:
+                      type: integer
+                      description: Математика
+                      minimum: 0
+                      maximum: 2
+                    hardware:
+                      type: integer
+                      description: Работа с оборудованием
+                      minimum: 0
+                      maximum: 2
+                    biology:
+                      type: integer
+                      description: Биология
+                      minimum: 0
+                      maximum: 2
+                    data_science:
+                      type: integer
+                      description: Аналитика данных
+                      minimum: 0
+                      maximum: 2
+                    design:
+                      type: integer
+                      description: Разработка GUI
+                      minimum: 0
+                      maximum: 2
+                    backend_development:
+                      type: integer
+                      description: Разработка Backend
+                      minimum: 0
+                      maximum: 2
+                    frontend_development:
+                      type: integer
+                      description: Разработка Frontend
+                      minimum: 0
+                      maximum: 2
+                    economy:
+                      type: integer
+                      description: Экономика и финансы
+                      minimum: 0
+                      maximum: 2
+                    hacking:
+                      type: integer
+                      description: Поиск ошибок и уязвимостей
+                      minimum: 0
+                      maximum: 2
+                  required:
+                    - web_development
+                    - system_administration
+                    - mathematics
+                    - hardware
+                    - biology
+                    - data_science
+                    - design
+                    - backend_development
+                    - frontend_development
+                    - economy
+                    - hacking
+                preferred_it_job:
+                  type: string
+                  description: Какое направление IT вы бы выбрали?
+                  enum:
+                    - game_development
+                    - web_development
+                    - mobile_development
+                    - artificial_intelligence_and_machine_learning
+                    - systems_programming
+                    - cybersecurity
+                    - devops
+                    - design_ui_ux
+                    - data_analytics
+                    - qa
+                uni_was_my_decision:
+                  type: boolean
+                  description: Вы поступили в университет, потому что сами этого хотели?
+                is_grades_important:
+                  type: boolean
+                  description: Вам важно получать хорошие отметки?
+              required:
+                - gender
+                - sum_use_score
+                - olympiads
+                - hobbies
+                - likes
+                - preferred_study_direction_id
+                - uni_was_my_decision
+                - is_grades_important
+      responses:
+        200:
+          description: Рекомендуемое направление.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DirectionsStudy"
+              examples:
+                DirectionStudyGet:
+                  $ref: '#/components/examples/DirectionsStudy'
+        400:
+          description: Не валидные данные.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                RecommendationBadRequest:
+                  $ref: '#/components/examples/RecommendationBadRequest'

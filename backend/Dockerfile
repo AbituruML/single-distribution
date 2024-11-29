@@ -7,10 +7,14 @@ RUN apt-get update && apt-get install -y openjdk-17-jdk maven && apt-get clean
 WORKDIR /app
 
 # Копируем pom.xml и другие файлы, необходимые для сборки
-COPY  ./*.jar /app/*.jar
+COPY pom.xml ./
+COPY src ./src
+
+# Собираем проект
+RUN mvn clean package -DskipTests
 
 # Указываем команду для запуска приложения
-ENTRYPOINT ["java", "-jar", "/app/*.jar"]
+ENTRYPOINT ["java", "-jar", "target/server.jar"]
 
 # Открываем порт, на котором будет работать ваше приложение
 EXPOSE 8080
